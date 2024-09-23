@@ -1,0 +1,12 @@
+templates/
+.idea/
+kreativpark/.env
+db.sqlite3
+*.pyc
+__pycache__
+core/__pycache__
+api/__pycache__
+kreativpark/__pycache__
+kreativpark/migrations/
+core/migrations/
+api/migrations/

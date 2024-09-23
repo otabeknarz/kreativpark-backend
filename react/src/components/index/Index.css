@@ -1,0 +1,233 @@
+/* Welcome section */
+
+section.welcome img {
+    width: 100%;
+    position: relative;
+    filter: brightness(60%);
+}
+
+section.welcome .welcome-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+
+section.welcome .welcome-text h1 {
+    font-size: 3rem;
+    color: white;
+    margin-bottom: 20px;
+}
+
+section.welcome .welcome-text a {
+    font-size: 1.5rem;
+}
+
+/* End Welcome section */
+
+
+/* Features section */
+
+
+
+
+/* End Features Section */
+
+
+/* News section */
+
+.news {
+    padding: 80px 0;
+}
+
+.news h1 {
+    text-align: center;
+    font-size: 2.5rem;
+    color: green;
+    margin-bottom: 20px;
+}
+
+.news .slider {
+    flex-wrap: nowrap;
+}
+
+.slider {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.prev-button, .next-button {
+    width: 40px;
+    height: 100%;
+    align-self: center;
+    font-size: 2rem;
+    color: green;
+    text-align: center;
+}
+
+.slider .card {
+    background-color: #f5f5f5;
+    display: inline-block;
+    height: 400px;
+    width: 400px;
+    overflow: hidden;
+    transition: 0.3s;
+    border-radius: var(--border-radius);
+    margin: 20px 0;
+}
+
+.slider .card .image {
+    position: relative;
+}
+
+.slider .card .image img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    margin-bottom: 10px;
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.slider .card .info {
+    padding: 0 10px;
+}
+
+.slider .top {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
+}
+
+.slider .card a {
+    display: block;
+    text-decoration: none;
+}
+
+.slider .card a.info h2,
+.slider .card a.info p.subtitle {
+    color: green;
+}
+
+.slider .card a.info,
+.slider .top p.date,
+.slider .top .views{
+    color: #828282;
+}
+
+/* End News section */
+
+
+/* Stats section */
+
+
+/* End Stats section */
+
+
+/* Rooms section */
+
+.room-section {
+    background-color: #f5f5f5;
+    padding: 40px 0;
+}
+
+.rooms {
+    padding: 80px 0;
+}
+
+.rooms h1 {
+    text-align: center;
+    color: green;
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+}
+
+.rooms .slider .card {
+    background-color: white;
+    width: 360px;
+    height: 360px;
+}
+
+/* End Rooms section */
+
+/* Contact section */
+
+.contact {
+    padding: 80px 0;
+}
+
+.contact h1 {
+    color: green;
+    font-size: 2.5rem;
+}
+
+.contact h3 {
+    color: #828282;
+    margin-bottom: 20px;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+form .user-data {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+form .user-data .input {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding-right: 20px;
+}
+
+form .user-data .input span,
+form span {
+    text-align: right;
+    color: green;
+}
+
+form .user-data .input label,
+form label {
+    font-size: 1.5rem;
+    color: green;
+    margin-bottom: 10px;
+}
+
+form .user-data .input input,
+form textarea {
+    width: 100%;
+    border: 1px solid green;
+    border-radius: var(--border-radius);
+    padding: 10px;
+    font-size: 1rem;
+    outline: none;
+    color: green;
+    font-family: "Fredoka", sans-serif;
+}
+
+form label {
+    margin-top: 20px;
+}
+
+form textarea {
+    height: 150px;
+    resize: none;
+}
+
+form button {
+    margin: 40px 0;
+    font-size: 1.5rem !important;
+}
+
+/* End Contact section */

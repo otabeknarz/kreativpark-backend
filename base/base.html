@@ -1,0 +1,53 @@
+<!doctype html>
+{% load static %}
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/base/base.css' %}">
+</head>
+<body>
+{% include 'base/header.html' %}
+
+{% if messages %}
+<div class="messages">
+    <div>
+        <ul>
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                {% if message.tags == "success" %}
+                <i class="fa-solid fa-circle-check"></i>
+                {% elif message.tags == "warning" %}
+                <i class="fa-solid fa-circle-exclamation"></i>
+                {% elif message.tags == "info" %}
+                <i class="fa-solid fa-circle-info"></i>
+                {% elif message.tags == "error" %}
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                {% endif %}
+                {{ message }}
+                <i class="fa-solid fa-x"></i>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<div class="image-viewer" id="image-viewer">
+    <i class="fa-solid fa-xmark"></i>
+    <img src="" alt="">
+</div>
+
+{% block content %}
+{% endblock %}
+{% include 'base/footer.html' %}
+<script src="{% static 'js/base/base.js' %}"></script>
+{% block js %}{% endblock %}
+</body>
+</html>
