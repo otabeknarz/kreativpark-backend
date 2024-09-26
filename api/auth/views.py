@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from api.serializers import UserSerializer
 from core.models import NumberToken
 
 
@@ -39,6 +41,7 @@ class CustomTokenView(APIView):
             {
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
+                "user": UserSerializer(number_token.user).data,
             },
             status=status.HTTP_200_OK,
         )
