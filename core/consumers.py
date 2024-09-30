@@ -32,6 +32,7 @@ class SeatConsumer(AsyncWebsocketConsumer):
             self.group_name,
             self.channel_name
         )
+        await self.close()
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -43,7 +44,7 @@ class SeatConsumer(AsyncWebsocketConsumer):
             {
                 'type': 'chat_message',
                 'seat_id': seat_id,
-                'user': self.user,
+                'user': self.user.username,
                 'status': status,
             }
         )
@@ -54,6 +55,6 @@ class SeatConsumer(AsyncWebsocketConsumer):
 
         await self.send(text_data=json.dumps({
             'seat_id': seat_id,
-            'user': self.user,
+            'user': self.user.username,
             'status': status,
         }))

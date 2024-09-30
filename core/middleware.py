@@ -1,32 +1,40 @@
-from django.contrib.auth.models import AnonymousUser
+from urllib.parse import parse_qs
 from channels.db import database_sync_to_async
-from channels.middleware import BaseMiddleware
-from jwt import decode as jwt_decode, ExpiredSignatureError, InvalidTokenError
-from django.conf import settings
+from rest_framework_simplejwt.tokens import UntypedToken
+from rest_framework_simplejwt.exceptions import InvalidToken
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
+import jwt
+from django.conf import settings
 
 @database_sync_to_async
-def get_user_from_jwt(token):
+def get_user_from_token(token):
     try:
-        decoded_data = jwt_decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-        user_id = decoded_data.get("user_id")
+        # Decode the token using the SECRET_KEY
+        decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+        user_id = decoded_data.get('user_id')
 
-        return User.objects.get(id=user_id)
-    except (ExpiredSignatureError, InvalidTokenError, User.DoesNotExist):
+        if user_id:
+            return get_user_model().objects.get(id=user_id)
+        else:
+            return AnonymousUser()
+    except (jwt.ExpiredSignatureError, jwt.DecodeError, get_user_model().DoesNotExist):
         return AnonymousUser()
 
+class JWTAuthMiddleware:
+    def __init__(self, inner):
+        self.inner = inner
 
-class JWTAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
-        headers = dict(scope['headers'])
-        token = None
+        # Extract token from query string
+        query_string = parse_qs(scope['query_string'].decode())
+        token = query_string.get('token')
 
-        if b'sec-websocket-protocol' in headers:
-            protocols = headers[b'sec-websocket-protocol'].decode().split(',')
-            token = protocols[0].strip()
+        if token:
+            # Fetch user associated with this token asynchronously
+            scope['user'] = await get_user_from_token(token[0])
+        else:
+            scope['user'] = AnonymousUser()
 
-        scope['user'] = await get_user_from_jwt(token)
-        return await super().__call__(scope, receive, send)
+        # Call the inner application (the consumer)
+        return await self.inner(scope, receive, send)
