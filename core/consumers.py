@@ -52,9 +52,10 @@ class SeatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         seat_id = event['seat_id']
         status = event['status']
+        username = event['user']
 
         await self.send(text_data=json.dumps({
             'seat_id': seat_id,
-            'user': self.user.username,
+            'user': username,
             'status': status,
         }))
