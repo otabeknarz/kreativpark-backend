@@ -156,6 +156,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://otabek.me",
     "https://otabeks-app.netlify.app",
+    "https://api.otabek.me",
 ]
 
 REST_FRAMEWORK = {
