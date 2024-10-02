@@ -38,29 +38,26 @@ class SeatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        seat_id = text_data_json["seat_id"]
+        seat = text_data_json["seat"]
         status = text_data_json["status"]
 
         await self.channel_layer.group_send(
             self.group_name,
             {
                 "type": "booking_seat",
-                "seat_id": seat_id,
-                "user": self.user.username,
+                "seat": seat,
                 "status": status,
             },
         )
 
     async def booking_seat(self, event):
-        seat_id = event["seat_id"]
+        seat = event["seat"]
         status = event["status"]
-        username = event["user"]
 
         await self.send(
             text_data=json.dumps(
                 {
-                    "seat_id": seat_id,
-                    "user": username,
+                    "seat": seat,
                     "status": status,
                 }
             )

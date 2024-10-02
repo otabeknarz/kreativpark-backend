@@ -253,11 +253,11 @@ def get_number_token(request, user_id):
     try:
         people.number_token.delete()
     except Exception as e:
-        number_token = NumberToken.objects.create(people=people)
+        number_token = NumberToken.objects.create(people=people, user=people.user)
         return Response(
             {"status": "true", "number_token": str(number_token.number_token)}
         )
-    number_token = NumberToken.objects.create(people=people)
+    number_token = NumberToken.objects.create(people=people, user=people.user)
     return Response({"status": "true", "number_token": str(number_token.number_token)})
 
 
