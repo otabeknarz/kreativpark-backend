@@ -152,6 +152,12 @@ CORS_ALLOWED_ORIGINS = [
     "https://otabeks-app.netlify.app",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+    "https://otabek.me",
+    "https://otabeks-app.netlify.app",
+]
+
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAdminUser",
