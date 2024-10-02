@@ -1,13 +1,13 @@
 from urllib.parse import parse_qs
 from channels.db import database_sync_to_async
-from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth import get_user_model
 import jwt
 from django.conf import settings
 
 
 @database_sync_to_async
 def get_user_from_token(token):
+    from django.contrib.auth.models import AnonymousUser
+    from django.contrib.auth import get_user_model
     try:
         # Decode the token using the SECRET_KEY
         decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
