@@ -15,7 +15,7 @@ load_dotenv()
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
@@ -87,13 +87,13 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        # "NAME": BASE_DIR / "db.sqlite3",
-        "NAME": "kreativpark_db",
-        "USER": "otabek",
-        "PASSWORD": "pass",
-        "HOST": "localhost",
-        "PORT": "",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": BASE_DIR / "db.sqlite3",
+        # "NAME": "kreativpark_db",
+        # "USER": "otabek",
+        # "PASSWORD": "pass",
+        # "HOST": "localhost",
+        # "PORT": "",
     }
 }
 
@@ -148,7 +148,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://otabek.me"
+    "https://otabek.me",
+    "https://otabeks-app.netlify.app",
 ]
 
 REST_FRAMEWORK = {
