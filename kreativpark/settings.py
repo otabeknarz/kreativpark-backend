@@ -69,13 +69,13 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'kreativpark.asgi.application'
+ASGI_APPLICATION = "kreativpark.asgi.application"
 WSGI_APPLICATION = "kreativpark.wsgi.application"
 
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
@@ -88,12 +88,12 @@ CHANNEL_LAYERS = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-        # "NAME": "kreativpark_db",
-        # "USER": "otabek",
-        # "PASSWORD": "pass",
-        # "HOST": "localhost",
-        # "PORT": "",
+        # "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": "kreativpark_db",
+        "USER": "otabek",
+        "PASSWORD": "pass",
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
 
@@ -148,6 +148,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
+    "https://otabek.me"
 ]
 
 REST_FRAMEWORK = {
