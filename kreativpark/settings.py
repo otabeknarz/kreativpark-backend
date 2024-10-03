@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["otabek.me", "api.otabek.me"]
+ALLOWED_HOSTS = ["otabek.me", "api.otabek.me", "194.35.13.58"]
 
 
 # Application definition
@@ -149,11 +149,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "https://otabek.me",
     "https://api.otabek.me",
+    "http://194.35.13.58",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://otabek.me",
     "https://api.otabek.me",
+    "http://194.35.13.58",
 ]
 
 REST_FRAMEWORK = {
