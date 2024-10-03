@@ -7,7 +7,7 @@ from .serializers import (
     QrCodeSerializer,
     PeopleIDSerializer,
     UserSerializer,
-    SeatSerializer,
+    SeatSerializer, PeoplePostSerializer,
 )
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -85,7 +85,7 @@ def people_get(request):
 
 @api_view(["POST"])
 def people_post(request):
-    serializer = PeopleSerializer(data=request.data)
+    serializer = PeoplePostSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
