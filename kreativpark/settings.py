@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["otabek.me", "api.otabek.me"]
 
 
 # Application definition
@@ -88,12 +88,12 @@ CHANNEL_LAYERS = {
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": BASE_DIR / "db.sqlite3",
-        # "NAME": "kreativpark_db",
-        # "USER": "otabek",
-        # "PASSWORD": "pass",
-        # "HOST": "localhost",
-        # "PORT": "",
+        # "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": "kreativpark_db",
+        "USER": "otabek",
+        "PASSWORD": "pass",
+        "HOST": "localhost",
+        "PORT": "",
     }
 }
 
@@ -134,12 +134,12 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 # STATICFILES_DIRS = (BASE_DIR / "static",)
-STATIC_ROOT = str(BASE_DIR / "static")
+STATIC_ROOT = BASE_DIR / "static"
 
 
 # Media settings
 MEDIA_URL = "/media/"
-MEDIA_ROOT = str(BASE_DIR / 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -147,15 +147,12 @@ MEDIA_ROOT = str(BASE_DIR / 'media')
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
     "https://otabek.me",
-    "https://otabeks-app.netlify.app",
+    "https://api.otabek.me",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173",
     "https://otabek.me",
-    "https://otabeks-app.netlify.app",
     "https://api.otabek.me",
 ]
 
