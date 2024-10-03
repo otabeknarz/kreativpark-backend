@@ -7,7 +7,7 @@ from .serializers import (
     QrCodeSerializer,
     PeopleIDSerializer,
     UserSerializer,
-    SeatSerializer, PeoplePostSerializer,
+    SeatSerializer, PeoplePostSerializer, UserPostSerializer,
 )
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -85,11 +85,13 @@ def people_get(request):
 
 @api_view(["POST"])
 def people_post(request):
-    serializer = PeoplePostSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    people_serializer = PeoplePostSerializer(data=request.data)
+    user_serializer = UserPostSerializer(data={"username": request.data["ID"], "password": request.data["ID"]})
+    if people_serializer.is_valid() and user_serializer.is_valid():
+        people_serializer.save()
+        user_serializer.save()
+        return Response(people_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(people_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])
