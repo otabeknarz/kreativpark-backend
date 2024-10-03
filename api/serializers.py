@@ -23,6 +23,18 @@ class QrCodeSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class PeoplePostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = People
+        fields = [
+            "ID",
+            "name",
+            "phone_number",
+            "passport_data",
+            "birthday_date",
+        ]
+
+
 class PeopleSerializer(serializers.ModelSerializer):
     seat = SeatSerializer()
     qrcode = QrCodeSerializer()
