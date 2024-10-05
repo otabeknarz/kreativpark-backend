@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["otabek.me", "api.otabek.me", "194.35.13.58"]
+ALLOWED_HOSTS = ["otabek.me", "api.otabek.me", "194.35.13.58", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -150,12 +150,14 @@ CORS_ALLOWED_ORIGINS = [
     "https://otabek.me",
     "https://api.otabek.me",
     "http://194.35.13.58",
+    "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://otabek.me",
     "https://api.otabek.me",
     "http://194.35.13.58",
+    "http://localhost:5173",
 ]
 
 REST_FRAMEWORK = {
