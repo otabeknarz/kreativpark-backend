@@ -7,7 +7,9 @@ from .serializers import (
     QrCodeSerializer,
     PeopleIDSerializer,
     UserSerializer,
-    SeatSerializer, PeoplePostSerializer, UserPostSerializer,
+    SeatSerializer,
+    PeoplePostSerializer,
+    UserPostSerializer,
 )
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
@@ -50,6 +52,10 @@ def enter_lib(request):
         return Response({"status": "false", "detail": str(e)})
     people = People.objects.get(user=request.user)
     people.seat = seat
+    try:
+        QrCode.objects.get(people=people).delete_qrcode()
+    except Exception as e:
+        pass
     qr_code = QrCode(people=people, type="IN", purpose="Kutubxona")
     qr_code.create_qr_code()
     people.save()
@@ -57,6 +63,28 @@ def enter_lib(request):
         {
             "status": "true",
             "seat": SeatSerializer(seat).data,
+            "qr_code_image": qr_code.image_path,
+            "user": UserSerializer(request.user).data,
+        },
+        status=status.HTTP_200_OK,
+    )
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def exit_lib(request):
+    people = People.objects.get(user=request.user)
+    try:
+        QrCode.objects.get(people=people).delete_qrcode()
+    except Exception as e:
+        pass
+    qr_code = QrCode(people=people, type="OUT", purpose="Kutubxona")
+    qr_code.create_qr_code()
+    people.seat = None
+    people.save()
+    return Response(
+        {
+            "status": "true",
             "qr_code_image": qr_code.image_path,
             "user": UserSerializer(request.user).data,
         },
@@ -86,7 +114,9 @@ def people_get(request):
 @api_view(["POST"])
 def people_post(request):
     people_serializer = PeoplePostSerializer(data=request.data)
-    user_serializer = UserPostSerializer(data={"username": request.data["ID"], "password": request.data["ID"]})
+    user_serializer = UserPostSerializer(
+        data={"username": request.data["ID"], "password": request.data["ID"]}
+    )
     if people_serializer.is_valid() and user_serializer.is_valid():
         people_serializer.save()
         user_serializer.save()
@@ -182,17 +212,52 @@ def people_has_qrcode(request, people_id):
         return Response({"status": "false", "detail": str(e)})
     return Response({"status": "true"})
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 
 @api_view(["GET"])
 def login_library(request, qrcode_ID):
     try:
         qrcode = QrCode.objects.get(ID=qrcode_ID)
-    except QrCode.DoesNotExist:
-        return Response({"status": "false"})
-    data = Data.objects.create(
+        people = qrcode.people
+    except Exception as e:
+        return Response({"status": "false", "detail": str(e)})
+    Data.objects.create(
         people=qrcode.people, purpose=qrcode.purpose, type=qrcode.type
     )
-    qrcode.delete()
+    if qrcode.type == "IN":
+        qrcode.delete_qrcode()
+        qr_code = QrCode(people=people, type="OUT", purpose=None)
+        qr_code.create_qr_code()
+        people.seat.has_taken = True
+
+        # Send message to the seat group for real time
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"sections_group",
+            {
+                "type": "booking_seat",
+                "seat": SeatSerializer(people.seat).data,
+                "status": True,
+            },
+        )
+    else:
+        # Send message to the seat group for real time
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            f"sections_group",
+            {
+                "type": "booking_seat",
+                "seat": SeatSerializer(people.seat).data,
+                "status": False,
+            },
+        )
+
+        people.seat.has_taken = False
+        qrcode.delete_qrcode()
+
+    people.seat.save()
     return Response({"status": "true"})
 
 
@@ -247,10 +312,7 @@ def stats(request, days):
 # get number token
 @api_view(["GET"])
 def get_number_token(request, user_id):
-    try:
-        people = People.objects.get(ID=user_id)
-    except Exception as e:
-        return Response({"status": "false", "detail": str(e)})
+    people = People.objects.get(user__id=user_id)
 
     try:
         people.number_token.delete()
