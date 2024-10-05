@@ -1,4 +1,5 @@
 import datetime
+import os
 import uuid
 
 from django.utils import timezone
@@ -192,6 +193,11 @@ class QrCode(models.Model):
         self.image_path = f"images/qrcodes/{self.ID}.png"
         self.save()
         return self.image_path
+
+    def delete_qrcode(self):
+        os.remove(f"media/{self.image_path}")
+        self.delete()
+        return True
 
 
 class Data(models.Model):
