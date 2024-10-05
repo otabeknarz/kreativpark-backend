@@ -212,6 +212,7 @@ def people_has_qrcode(request, people_id):
         return Response({"status": "false", "detail": str(e)})
     return Response({"status": "true"})
 
+
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
@@ -223,9 +224,7 @@ def login_library(request, qrcode_ID):
         people = qrcode.people
     except Exception as e:
         return Response({"status": "false", "detail": str(e)})
-    Data.objects.create(
-        people=qrcode.people, purpose=qrcode.purpose, type=qrcode.type
-    )
+    Data.objects.create(people=qrcode.people, purpose=qrcode.purpose, type=qrcode.type)
     if qrcode.type == "IN":
         qrcode.delete_qrcode()
         qr_code = QrCode(people=people, type="OUT", purpose=None)

@@ -8,6 +8,7 @@ from django.conf import settings
 def get_user_from_token(token):
     from django.contrib.auth.models import AnonymousUser
     from django.contrib.auth import get_user_model
+
     try:
         # Decode the token using the SECRET_KEY
         decoded_data = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
