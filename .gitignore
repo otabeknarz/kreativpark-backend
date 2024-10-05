@@ -10,3 +10,4 @@ kreativpark/__pycache__
 kreativpark/migrations/
 core/migrations/
 api/migrations/
+kreativpark/settings/.env
