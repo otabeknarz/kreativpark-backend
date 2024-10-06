@@ -24,6 +24,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
     "139.59.147.22",
+    "ws.otabek.me",
 ]
 
 STATIC_ROOT = BASE_DIR / "static"
