@@ -49,7 +49,7 @@ def enter_lib(request):
     try:
         seat = Seat.objects.get(ID=seat_id)
     except Exception as e:
-        return Response({"status": "false", "detail": str(e)})
+        return Response({"status": "false", "detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     people = People.objects.get(user=request.user)
     people.seat = seat
     try:
@@ -64,6 +64,22 @@ def enter_lib(request):
             "status": "true",
             "seat": SeatSerializer(seat).data,
             "qr_code_image": qr_code.image_path,
+            "user": UserSerializer(request.user).data,
+        },
+        status=status.HTTP_200_OK,
+    )
+
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def cancel_booking(request):
+    people = People.objects.get(user=request.user)
+    people.seat = None
+    people.qrcode.delete_qrcode()
+    people.save()
+    return Response(
+        {
+            "status": "true",
             "user": UserSerializer(request.user).data,
         },
         status=status.HTTP_200_OK,
@@ -224,12 +240,13 @@ def login_library(request, qrcode_ID):
         people = qrcode.people
     except Exception as e:
         return Response({"status": "false", "detail": str(e)})
-    Data.objects.create(people=qrcode.people, purpose=qrcode.purpose, type=qrcode.type)
+    Data.objects.create(people=qrcode.people, purpose=qrcode.purpose if qrcode.purpose else "", type=qrcode.type)
     if qrcode.type == "IN":
         qrcode.delete_qrcode()
         qr_code = QrCode(people=people, type="OUT", purpose=None)
         qr_code.create_qr_code()
         people.seat.has_taken = True
+        people.seat.save()
 
         # Send message to the seat group for real time
         channel_layer = get_channel_layer()
@@ -254,9 +271,12 @@ def login_library(request, qrcode_ID):
         )
 
         people.seat.has_taken = False
+        people.seat.save()
+        people.seat = None
         qrcode.delete_qrcode()
 
-    people.seat.save()
+    people.save()
+
     return Response({"status": "true"})
 
 
