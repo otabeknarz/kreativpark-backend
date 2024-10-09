@@ -29,6 +29,7 @@ urlpatterns = [
     path("user/edit/", views.edit_user, name="user_edit"),
     path("seats/", views.seat_get, name="seat_get"),
     path("enter-lib/", views.enter_lib, name="enter_lib"),
+    path("cancel-booking/", views.cancel_booking, name="cancel_booking"),
 ]
 
 # Urls for admins
