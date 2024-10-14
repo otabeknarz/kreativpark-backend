@@ -136,10 +136,13 @@ def people_post(request):
     )
     if people_serializer.is_valid() and user_serializer.is_valid():
         user = user_serializer.save()
-        people_serializer.user = user
-        people_serializer.save()
+        people_serializer.save(user=user)
         return Response(people_serializer.data, status=status.HTTP_201_CREATED)
-    return Response(people_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(
+        {**people_serializer.errors, **user_serializer.errors},
+        status=status.HTTP_400_BAD_REQUEST
+    )
 
 
 @api_view(["GET"])
