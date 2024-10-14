@@ -135,10 +135,9 @@ def people_post(request):
         data={"username": request.data["ID"], "password": request.data["ID"]}
     )
     if people_serializer.is_valid() and user_serializer.is_valid():
-        people = people_serializer.save(commit=False)
         user = user_serializer.save()
-        people.user = user
-        people.save()
+        people_serializer.user = user
+        people_serializer.save()
         return Response(people_serializer.data, status=status.HTTP_201_CREATED)
     return Response(people_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
