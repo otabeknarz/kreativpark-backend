@@ -1,5 +1,4 @@
 from rest_framework.permissions import IsAuthenticated
-from websockets.version import commit
 
 from core.models import People, QrCode, Data, NumberToken, Seat
 from datetime import datetime, timedelta
@@ -18,6 +17,9 @@ from rest_framework import status
 
 # csrf token
 from django.middleware.csrf import get_token
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 
 
 @api_view(["GET"])
@@ -75,9 +77,21 @@ def enter_lib(request):
 @permission_classes([IsAuthenticated])
 def cancel_booking(request):
     people = People.objects.get(user=request.user)
+    seat = people.seat
     people.seat = None
     people.qrcode.delete_qrcode()
     people.save()
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        f"sections_group",
+        {
+            "type": "booking_seat",
+            "seat": {"ID": seat.ID, "has_taken": False, "name": seat.name, "image": seat.image.url},
+            "status": False,
+        },
+    )
+
     return Response(
         {
             "status": "true",
@@ -232,10 +246,6 @@ def people_has_qrcode(request, people_id):
     except Exception as e:
         return Response({"status": "false", "detail": str(e)})
     return Response({"status": "true"})
-
-
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
 
 
 @api_view(["GET"])
