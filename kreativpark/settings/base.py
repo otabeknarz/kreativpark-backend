@@ -125,14 +125,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CORS_ALLOWED_ORIGINS = [
     "https://otabek.me",
     "https://api.otabek.me",
-    "http://194.35.13.58",
+    "http://139.59.147.22",
     "http://localhost:5173",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://otabek.me",
     "https://api.otabek.me",
-    "http://194.35.13.58",
+    "http://139.59.147.22",
     "http://localhost:5173",
 ]
 
