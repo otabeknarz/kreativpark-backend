@@ -210,6 +210,9 @@ class Data(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     purpose = models.CharField(max_length=1024)
     type = models.CharField(max_length=3, choices=Types.choices)
+    seat = models.ForeignKey(
+        Seat, on_delete=models.CASCADE, related_name="data", null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.people.name} - {self.purpose} - {self.created_at}"
