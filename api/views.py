@@ -207,11 +207,23 @@ def qrcode_delete(request, user_ID):
 
 @api_view(["POST"])
 def qrcode_post(request):
-    serializer = QrCodeSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    people = People.objects.get(ID=request.data["people_id"])
+    try:
+        QrCode.objects.get(people=people).delete_qrcode()
+    except Exception as e:
+        pass
+    qr_code = QrCode(people=people, type="IN", purpose="Kutubxona")
+    qr_code.create_qr_code()
+    people.save()
+    return Response(
+        {
+            "status": "true",
+            "seat": None,
+            "qr_code_image": qr_code.image_path,
+            "user": UserSerializer(request.user).data,
+        },
+        status=status.HTTP_200_OK,
+    )
 
 
 @api_view(["GET"])
@@ -219,7 +231,7 @@ def qrcode_check(request, ID):
     try:
         qrcode = QrCode.objects.get(ID=ID)
     except QrCode.DoesNotExist:
-        return Response({"status": "false"})
+        return Response({"status": "false", "detail": "QrCode not found"})
     return Response(
         {
             "status": "true",
