@@ -7,7 +7,4 @@ __pycache__
 core/__pycache__
 api/__pycache__
 kreativpark/__pycache__
-kreativpark/migrations/
-core/migrations/
-api/migrations/
 kreativpark/settings/.env
