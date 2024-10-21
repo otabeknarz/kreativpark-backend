@@ -52,7 +52,9 @@ def enter_lib(request):
     try:
         seat = Seat.objects.get(ID=seat_id)
     except Exception as e:
-        return Response({"status": "false", "detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"status": "false", "detail": str(e)}, status=status.HTTP_400_BAD_REQUEST
+        )
     people = People.objects.get(user=request.user)
     people.seat = seat
     try:
@@ -87,7 +89,12 @@ def cancel_booking(request):
         f"sections_group",
         {
             "type": "booking_seat",
-            "seat": {"ID": seat.ID, "has_taken": False, "name": seat.name, "image": seat.image.url},
+            "seat": {
+                "ID": seat.ID,
+                "has_taken": False,
+                "name": seat.name,
+                "image": seat.image.url,
+            },
             "status": False,
         },
     )
@@ -155,7 +162,7 @@ def people_post(request):
 
     return Response(
         {**people_serializer.errors, **user_serializer.errors},
-        status=status.HTTP_400_BAD_REQUEST
+        status=status.HTTP_400_BAD_REQUEST,
     )
 
 
@@ -212,7 +219,11 @@ def qrcode_post(request):
         QrCode.objects.get(people=people).delete_qrcode()
     except Exception as e:
         pass
-    qr_code = QrCode(people=people, type=request.data["type"], purpose=request.data["purpose"] if request.data["type"] == "IN" else None)
+    qr_code = QrCode(
+        people=people,
+        type=request.data["type"],
+        purpose=request.data["purpose"] if request.data["type"] == "IN" else None,
+    )
     qr_code.create_qr_code()
     people.save()
     return Response(
@@ -267,7 +278,11 @@ def login_library(request, qrcode_ID):
         people = qrcode.people
     except Exception as e:
         return Response({"status": "false", "detail": str(e)})
-    Data.objects.create(people=qrcode.people, purpose=qrcode.purpose if qrcode.purpose else "", type=qrcode.type)
+    Data.objects.create(
+        people=qrcode.people,
+        purpose=qrcode.purpose if qrcode.purpose else "",
+        type=qrcode.type,
+    )
     if qrcode.type == "IN":
         qrcode.delete_qrcode()
         qr_code = QrCode(people=people, type="OUT", purpose=None)
@@ -357,8 +372,8 @@ def stats(request, days):
 
 # get number token
 @api_view(["GET"])
-def get_number_token(request, user_id):
-    people = People.objects.get(user__id=user_id)
+def get_number_token(request, people_id):
+    people = People.objects.get(ID=people_id)
 
     try:
         people.number_token.delete()
