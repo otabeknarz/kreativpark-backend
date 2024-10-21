@@ -18,6 +18,7 @@ class BaseModel(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        abstract = True
 
 
 class NewsManager(models.Manager):
@@ -56,13 +57,6 @@ class News(BaseModel):
     time = models.TimeField(null=True, blank=True)
     views = models.IntegerField(default=0)
     is_event = models.BooleanField(default=False)
-    # room = models.ForeignKey(
-    #     Room,
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     blank=True,
-    #     related_name='news'
-    # ) core.News.room: (models.E006) The field 'room' clashes with the field 'room' from model 'core.basemodel'.
     status = models.BooleanField(default=False)
 
     description = models.TextField()
@@ -140,15 +134,13 @@ class Seat(BaseModel):
         return self.name
 
 
-class People(models.Model):
+class People(BaseModel):
     ID = models.CharField(max_length=40, primary_key=True, unique=True)
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="people", null=True, blank=True
     )
     name = models.CharField(max_length=128)
     phone_number = models.CharField(max_length=20, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     passport_data = models.CharField(max_length=50, blank=True, null=True)
     birthday_date = models.DateField(null=True, blank=True)
     image = models.ImageField(
@@ -168,7 +160,7 @@ class People(models.Model):
         super(People, self).save(*args, **kwargs)
 
 
-class QrCode(models.Model):
+class QrCode(BaseModel):
     class Types(models.TextChoices):
         IN = "IN", "Kirish"
         OUT = "OUT", "Chiqish"
@@ -182,7 +174,6 @@ class QrCode(models.Model):
     image_path = models.CharField(max_length=1024)
     type = models.CharField(max_length=3, choices=Types.choices)
     purpose = models.CharField(max_length=1024, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.created_at} - {self.people.name}"
@@ -200,14 +191,12 @@ class QrCode(models.Model):
         return True
 
 
-class Data(models.Model):
+class Data(BaseModel):
     class Types(models.TextChoices):
         IN = "IN", "Kirish"
         OUT = "OUT", "Chiqish"
 
     people = models.ForeignKey(People, on_delete=models.CASCADE, related_name="data")
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     purpose = models.CharField(max_length=1024)
     type = models.CharField(max_length=3, choices=Types.choices)
     seat = models.ForeignKey(
