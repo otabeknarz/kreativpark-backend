@@ -212,7 +212,7 @@ def qrcode_post(request):
         QrCode.objects.get(people=people).delete_qrcode()
     except Exception as e:
         pass
-    qr_code = QrCode(people=people, type="IN", purpose="Kutubxona")
+    qr_code = QrCode(people=people, type=request.data["type"], purpose=request.data["purpose"] if request.data["type"] == "IN" else None)
     qr_code.create_qr_code()
     people.save()
     return Response(
