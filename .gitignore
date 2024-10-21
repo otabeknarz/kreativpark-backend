@@ -8,3 +8,10 @@ core/__pycache__
 api/__pycache__
 kreativpark/__pycache__
 kreativpark/settings/.env
+media/*
+!media/images/
+!media/images/qrcodes/
+!media/images/news/
+!media/images/people/
+!media/images/rooms/
+!media/images/no_image.png
