@@ -288,8 +288,9 @@ def login_library(request, qrcode_ID):
         qrcode.delete_qrcode()
         qr_code = QrCode(people=people, type="OUT", purpose=None)
         qr_code.create_qr_code()
-        people.seat.has_taken = True
-        people.seat.save()
+        if people.seat:
+            people.seat.has_taken = True
+            people.seat.save()
 
         # Send message to the seat group for real time
         channel_layer = get_channel_layer()
@@ -313,9 +314,10 @@ def login_library(request, qrcode_ID):
             },
         )
 
-        people.seat.has_taken = False
-        people.seat.save()
-        people.seat = None
+        if people.seat:
+            people.seat.has_taken = False
+            people.seat.save()
+            people.seat = None
         qrcode.delete_qrcode()
 
     people.save()
