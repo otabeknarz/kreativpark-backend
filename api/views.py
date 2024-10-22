@@ -325,6 +325,12 @@ def login_library(request, qrcode_ID):
     return Response({"status": "true"})
 
 
+@api_view(["GET"])
+def stats_home(request):
+    count_of_people_in_library = QrCode.objects.filter(type="OUT").count()
+    return Response({"count_of_people_in_library": count_of_people_in_library}, status=status.HTTP_200_OK)
+
+
 # Functions for admins
 @api_view(["GET"])
 def stats(request, days):

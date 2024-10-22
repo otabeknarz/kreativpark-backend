@@ -27,6 +27,7 @@ urlpatterns = [
     path("get-csrf-token/", views.get_csrf_token, name="get_csrf_token"),
     path("user/", views.get_user, name="user_get"),
     path("user/edit/", views.edit_user, name="user_edit"),
+    path("stats/home/", views.stats_home, name="stats_home"),
     path("seats/", views.seat_get, name="seat_get"),
     path("enter-lib/", views.enter_lib, name="enter_lib"),
     path("cancel-booking/", views.cancel_booking, name="cancel_booking"),
