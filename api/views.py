@@ -282,6 +282,7 @@ def login_library(request, qrcode_ID):
         people=qrcode.people,
         purpose=qrcode.purpose if qrcode.purpose else "",
         type=qrcode.type,
+        seat=people.seat,
     )
     if qrcode.type == "IN":
         qrcode.delete_qrcode()
