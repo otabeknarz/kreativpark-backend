@@ -265,9 +265,9 @@ def people_has_qrcode(request, people_id):
     except Exception as e:
         return Response({"status": "false", "detail": str(e)})
     try:
-        qrcode = people.qrcode
+        qrcode = QrCode.objects.get(people=people)
     except Exception as e:
-        return Response({"status": "false", "detail": str(e)})
+        return Response({"status": "false"})
     return Response({"status": "true"})
 
 
