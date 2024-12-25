@@ -14,7 +14,7 @@ class SeatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Seat
-        fields = "ID", "name", "image", "people", "has_taken"
+        fields = "ID", "name", "image", "people", "has_taken", "section"
 
 
 class QrCodeSerializer(serializers.ModelSerializer):
