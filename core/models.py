@@ -123,12 +123,18 @@ class NumberToken(BaseModel):
 
 
 class Seat(BaseModel):
+    class Sections(models.TextChoices):
+        A = "A", "A"
+        B = "B", "B"
+        C = "C", "C"
+
     ID = models.CharField(max_length=20, unique=True, primary_key=True)
     name = models.CharField(max_length=100)
     has_taken = models.BooleanField(default=False)
     image = models.ImageField(
         upload_to="images/seats/", default="images/no_image.png", blank=True
     )
+    section = models.CharField(max_length=1, choices=Sections.choices, null=True)
 
     def __str__(self):
         return self.name
