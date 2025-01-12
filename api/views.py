@@ -268,7 +268,13 @@ def people_has_qrcode(request, people_id):
         qrcode = QrCode.objects.get(people=people)
     except Exception as e:
         return Response({"status": "false", "detail": str(e)})
-    return Response({"status": "true", "detail": "QrCode already exists", "qrcode": QrCodeSerializer(qrcode).data})
+    return Response(
+        {
+            "status": "true",
+            "detail": "QrCode already exists",
+            "people": PeopleSerializer(people).data,
+        }
+    )
 
 
 @api_view(["GET"])
