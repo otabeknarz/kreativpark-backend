@@ -279,20 +279,32 @@ def people_has_qrcode(request, people_id):
 
 @api_view(["GET"])
 def cancel_all_expired_booked_seats(request):
-    expiration_time = datetime.now() - timedelta(minutes=40)
+    try:
+        expiration_time = datetime.now() - timedelta(minutes=40)
 
-    # Filter expired QR codes
-    expired_qrcodes = QrCode.objects.filter(
-        created_at__lt=expiration_time,
-        type="IN",
-        people__seat__isnull=False
-    )
+        # Filter expired QR codes
+        expired_qrcodes = QrCode.objects.filter(
+            created_at__lt=expiration_time,
+            type="IN",
+            people__seat__isnull=False
+        )
 
-    # Update related people's seats to null
-    People.objects.filter(qrcode__in=expired_qrcodes).update(seat=None)
+        # Update related people's seats to null
+        People.objects.filter(qrcode__in=expired_qrcodes).update(seat=None)
 
-    # Bulk delete the expired QR codes
-    expired_qrcodes.delete()
+        # Bulk delete the expired QR codes
+        expired_qrcodes.delete()
+
+    except Exception as e:
+        return Response(
+            {
+                "status": "false",
+                "detail": str(e)
+            },
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+    return Response({"status": "true", "detail": f"cancelled {len(expired_qrcodes)} booked seats"})
 
 
 @api_view(["GET"])

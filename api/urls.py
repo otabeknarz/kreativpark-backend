@@ -11,6 +11,10 @@ urlpatterns = [
     path("people/check/<str:ID>/", views.people_check, name="people_check"),
     path("qrcode/", views.qrcode_get, name="qrcode_get"),
     path("qrcode/add/", views.qrcode_post, name="qrcode_post"),
+    path(
+        "qrcode/delete/expired/",
+        views.cancel_all_expired_booked_seats,
+    ),
     path("qrcode/delete/<str:user_ID>/", views.qrcode_delete, name="qrcode_delete"),
     path("qrcode/check/<str:ID>/", views.qrcode_check, name="qrcode_check"),
     path("login-library/<str:qrcode_ID>/", views.login_library, name="login_library"),
@@ -18,10 +22,6 @@ urlpatterns = [
         "qrcode/people/check/<str:people_id>/",
         views.people_has_qrcode,
         name="people_has_qrcode",
-    ),
-    path(
-        "qrcode/delete/expired/",
-        views.cancel_all_expired_booked_seats,
     ),
     path(
         "get-number-token/<str:people_id>/",
