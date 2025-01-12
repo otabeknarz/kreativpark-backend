@@ -278,6 +278,24 @@ def people_has_qrcode(request, people_id):
 
 
 @api_view(["GET"])
+def cancel_all_expired_booked_seats(request):
+    expiration_time = datetime.now() - timedelta(minutes=40)
+
+    # Filter expired QR codes
+    expired_qrcodes = QrCode.objects.filter(
+        created_at__lt=expiration_time,
+        type="IN",
+        people__seat__isnull=False
+    )
+
+    # Update related people's seats to null
+    People.objects.filter(qrcode__in=expired_qrcodes).update(seat=None)
+
+    # Bulk delete the expired QR codes
+    expired_qrcodes.delete()
+
+
+@api_view(["GET"])
 def login_library(request, qrcode_ID):
     try:
         qrcode = QrCode.objects.get(ID=qrcode_ID)

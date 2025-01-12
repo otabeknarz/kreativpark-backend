@@ -20,6 +20,10 @@ urlpatterns = [
         name="people_has_qrcode",
     ),
     path(
+        "qrcode/delete/expired/",
+        views.cancel_all_expired_booked_seats,
+    ),
+    path(
         "get-number-token/<str:people_id>/",
         views.get_number_token,
         name="get_number_token",
